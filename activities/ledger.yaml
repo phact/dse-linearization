@@ -7,10 +7,19 @@ bindings:
   createdate: Add(1537387456); ToDate()
   startingbalance: FixedValue(0); ToDouble()
   initialtransaction: FixedValue(0); ToString()
-  newbalance: Pareto(1, 400000); Save('balance'); ToDouble()
-  #amount: Add(-1); Pareto(1,400000); Save('last_balance'); Expr('last_balance - balance'); ToDouble()
-  amount: Add(-1); Pareto(1,400000); Save('last_balance'); Expr('1+2'); ToDouble()
-  #amount: Add(-1); Pareto(1,400000); Save('last_balance'); ToDouble()
+  newbalance: Pareto(400000, 1); Save('balance'); ToDouble()
+# 1) error loading a double - Load should  ignore the input type using Object
+# 2) show recepie construction / TRACE isn't working
+  #amount: Save('cycle'); Pareto(400000, 1); Save("paretoCurrent");  FixedValue(0); Pareto(400000,1); Save('paretoOf0'); ;  Expr('paretoCurrent == paretoOf0 ? 0 : paretoCurrnet'); Add(-1); Pareto(400000, 1); Save('last_balance'); Expr('last_balance - balance'); ToDouble()
+  amount: |
+    Add(-1L); Save('cycle'); Pareto(400000, 1) -> double; double -> Save('last_balance') -> double; Expr('if (cycle == 0){ 0.0 } else { balance - last_balance}'); ToDouble();
+  lastbalance: ToDouble(); Load('last_balance');
+  #lastbalance: Pareto(1,1) -> double; Load('last_balance');
+# 3) Save(Template combination)
+# 4) Variable dependency order for Expr and Load 
+# 5) Coherent noise founctions
+# 6) Scripting bindings
+  #amount: "Add(-1L); long -> Save(Template('cycle-{}',Mod(<<accounts:100000>>); Hash(); ToString();)) -> long; long -> Pareto(400000, 1) -> double; double -> Save('last_balance') -> double; double ->  Expr('if (cycle == 0){ 0.0 } else { balance - last_balance}') -> double; ToDouble();"
 
 blocks:
 # ./ebdse -vv run type=cql yaml=ledger tags=phase:schema cycles=1
@@ -40,7 +49,7 @@ blocks:
       phase: write-lwt 
     statements:
      - write-lwt: |
-        UPDATE dsbank.ledger SET amount= {amount}, balance = {newbalance} WHERE transactionid = {transactionid} AND accountid = {accountid} IF balance = {startingbalance};
+        UPDATE dsbank.ledger SET balance = {newbalance}, amount = {amount} WHERE transactionid = {transactionid} AND accountid = {accountid} IF balance = {lastbalance};
 
 # ./ebdse -v run type=cql yaml=ledger tags=phase:read cycles=1000
   - tags:
