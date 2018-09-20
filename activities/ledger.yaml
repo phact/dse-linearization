@@ -7,9 +7,9 @@ bindings:
   createdate: Add(1537387456); ToDate()
   startingbalance: FixedValue(0); ToDouble()
   initialtransaction: FixedValue(0); ToString()
-  newbalance: Pareto(400000, 1); Save('balance'); ToDouble()
+  newbalance: Pareto(400000, 1); Min(40000000); Max(-40000000); Save('balance'); ToDouble()
   amount: |
-    Add(-1L); Save('lastcycle'); Pareto(400000, 1) -> double; double -> Save('last_balance') -> double; Expr('if (lastcycle == 0){ 0.0 } if (lastcycle == -1L) { balance } else { balance - last_balance}'); ToDouble();
+    Add(-1L); Save('lastcycle'); Pareto(400000, 1); Min(40000000); Max(-40000000); Save('last_balance'); Expr('if (lastcycle == 0){ 0.0 } if (lastcycle == -1L) { balance } else { balance - last_balance}'); ToDouble();
   #'
   lastbalance: Expr('if (cycle ==0)  { 0.0} else {last_balance}'); ToDouble();
   #'
