@@ -1,0 +1,57 @@
+bindings:
+  accountid: Mod(1); Hash(); ToString()
+  customerid: Add(1); Hash(); ToString()
+  firstname: FirstNames()
+  lastname: LastNames()
+  company_name: Hash(); HashedLineToString('https://raw.githubusercontent.com/phact/ebdse-training/master/data/companies.txt?token=ABQJxIJCoSF3_k36xG-MS0pUIphDMdT3ks5bq-T6wA%3D%3D'); ToString() 
+  transactionid: Add(1); Hash(); ToString()
+  createdate: Add(1537387456); ToDate()
+  startingbalance: FixedValue(0); ToDouble()
+  initialtransaction: FixedValue(0); ToString()
+  newbalance: Pareto(1, 400000); Save('balance'); ToDouble()
+  #amount: Add(-1); Pareto(1,400000); Save('last_balance'); Expr('last_balance - balance'); ToDouble()
+  amount: Add(-1); Pareto(1,400000); Save('last_balance'); ToDouble()
+
+blocks:
+# ./ebdse -vv run type=cql yaml=ledger tags=phase:schema cycles=1
+  - tags:
+      phase: schema
+    statements:
+     - create-keyspace: |
+        create KEYSPACE dsbank WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1 };
+# ./ebdse -vv run type=cql yaml=ledger tags=phase:table cycles=1
+  - tags:
+      phase: table
+    statements:
+     - create-table: |
+        create TABLE dsbank.ledger ( accountid text, customerid text, first_name text STATIC, last_name text STATIC, company_name text STATIC, balance double STATIC, transactionid text, amount double, create_date date, PRIMARY KEY((accountid, customerid), transactionid));
+
+# ./ebdse -v run type=cql yaml=ledger tags=phase:write-lwt cycles=1000
+  - tags:
+      phase: write-create-accounts
+    statements:
+             #   newbalance: Pareto(1, 400000); Save('balance'); ToDouble()
+             #     amount: Add(-1); Pareto(1,400000); Save('last_balance'); Expr('last_balance - balance'); ToDouble()
+     - create-accounts: |
+        INSERT INTO dsbank.ledger (accountid , customerid , transactionid , company_name , first_name , last_name , balance ) VALUES ( {accountid}, {customerid}, {initialtransaction}, {company_name}, {firstname}, {lastname}, {startingbalance});
+
+# ./ebdse -v run type=cql yaml=ledger tags=phase:write-lwt cycles=1000
+  - tags:
+      phase: write-lwt 
+    statements:
+     - write-lwt: |
+        UPDATE dsbank.ledger SET amount= {amount}, balance = {newbalance} WHERE transactionid = {transactionid} AND accountid = {accountid} AND  customerid = {customerid} IF balance = {startingbalance};
+
+# ./ebdse -v run type=cql yaml=ledger tags=phase:write-single-writer cycles=1000
+  - tags:
+      phase: write-single-writer
+    statements:
+     - write-single-writer: |
+        INSERT this is the next q.
+
+# ./ebdse -v run type=cql yaml=ledger tags=phase:read cycles=1000
+  - tags:
+      phase: read
+    statements:
+     - read: |
+        select * from ...
