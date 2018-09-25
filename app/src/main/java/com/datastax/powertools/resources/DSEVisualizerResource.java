@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -74,6 +75,11 @@ public class DSEVisualizerResource {
         private double balanceSnapshot;
 
         @JsonProperty
+        @Column(name = "current_balance")
+        private double currentBalance;
+
+
+        @JsonProperty
         @Column(name = "amount")
         private double amount;
 
@@ -121,6 +127,8 @@ public class DSEVisualizerResource {
             Result<LedgerEvent> result = veMapper.getAll();
 
             List<LedgerEvent> output = result.all();
+
+            output = output.stream().filter(x -> x.currentBalance > 0).collect(Collectors.toList());
 
             return output;
 

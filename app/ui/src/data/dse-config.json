@@ -5,76 +5,26 @@
       "filters": [],
       "layers": [
         {
-          "id": "jodvvwm",
-          "type": "point",
+          "id": "wcg0dld",
+          "type": "arc",
           "config": {
             "dataId": "dsedata",
-            "label": "Payer",
+            "label": "Payments",
             "color": [
               218,
               0,
               0
             ],
             "columns": {
-              "lat": "lat",
-              "lng": "lon",
-              "altitude": null
-            },
-            "isVisible": true,
-            "visConfig": {
-              "radius": 12.1,
-              "fixedRadius": false,
-              "opacity": 0.8,
-              "outline": false,
-              "thickness": 2,
-              "colorRange": {
-                "name": "Global Warming",
-                "type": "sequential",
-                "category": "Uber",
-                "colors": [
-                  "#5A1846",
-                  "#900C3F",
-                  "#C70039",
-                  "#E3611C",
-                  "#F1920E",
-                  "#FFC300"
-                ]
-              },
-              "radiusRange": [
-                0,
-                50
-              ],
-              "hi-precision": false
-            }
-          },
-          "visualChannels": {
-            "colorField": null,
-            "colorScale": "ordinal",
-            "sizeField": null,
-            "sizeScale": "linear"
-          }
-        },
-        {
-          "id": "0jnpzu",
-          "type": "arc",
-          "config": {
-            "dataId": "dsedata",
-            "label": "Transaction",
-            "color": [
-              77,
-              193,
-              156
-            ],
-            "columns": {
-              "lat0": "lon",
+              "lat0": "lat",
               "lng0": "lon",
               "lat1": "toLat",
               "lng1": "toLon"
             },
             "isVisible": true,
             "visConfig": {
-              "opacity": 0.8,
-              "thickness": 2,
+              "opacity": 0.06,
+              "thickness": 1.4,
               "colorRange": {
                 "name": "Global Warming",
                 "type": "sequential",
@@ -90,71 +40,19 @@
               },
               "sizeRange": [
                 0,
-                2
+                10
               ],
-              "targetColor": null,
-              "hi-precision": false
-            }
-          },
-          "visualChannels": {
-            "colorField": {
-              "name": "companyName",
-              "type": "string"
-            },
-            "colorScale": "ordinal",
-            "sizeField": {
-              "name": "amount",
-              "type": "integer"
-            },
-            "sizeScale": "linear"
-          }
-        },
-        {
-          "id": "ff3sl6j",
-          "type": "point",
-          "config": {
-            "dataId": "dsedata",
-            "label": "Recepient",
-            "color": [
-              76,
-              154,
-              78
-            ],
-            "columns": {
-              "lat": "toLat",
-              "lng": "toLon",
-              "altitude": null
-            },
-            "isVisible": true,
-            "visConfig": {
-              "radius": 10,
-              "fixedRadius": false,
-              "opacity": 0.8,
-              "outline": false,
-              "thickness": 2,
-              "colorRange": {
-                "name": "Global Warming",
-                "type": "sequential",
-                "category": "Uber",
-                "colors": [
-                  "#5A1846",
-                  "#900C3F",
-                  "#C70039",
-                  "#E3611C",
-                  "#F1920E",
-                  "#FFC300"
-                ]
-              },
-              "radiusRange": [
-                0,
-                50
+              "targetColor": [
+                82,
+                163,
+                83
               ],
               "hi-precision": false
             }
           },
           "visualChannels": {
             "colorField": null,
-            "colorScale": "quantile",
+            "colorScale": "ordinal",
             "sizeField": null,
             "sizeScale": "linear"
           }
