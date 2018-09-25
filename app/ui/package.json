@@ -1,7 +1,7 @@
 {
   "name": "dse-visualizer",
   "version": "1.0.0",
-  "description": "React/Redux ui for Powertrain",
+  "description": "React/Redux ui for DSE Visualizations",
   "main": "src/app.js",
   "author": "Sebastián Estévez",
   "scripts": {

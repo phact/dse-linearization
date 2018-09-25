@@ -7,7 +7,7 @@ import RequestReducer from './requestReducers.js'
 
 // INITIAL_APP_STATE
 const initialAppState = {
-  appName: 'Powertrain Viewer',
+  appName: 'DSE Visualizer',
   loaded: false
 };
 
