@@ -128,9 +128,12 @@ public class DSEVisualizerResource {
 
             List<LedgerEvent> output = result.all();
 
-            output = output.stream().filter(x -> x.currentBalance > 0).collect(Collectors.toList());
+            List<LedgerEvent> filteredOutput = output.stream().filter(x ->
+            {
+                return x.currentBalance > 0;
+            }).collect(Collectors.toList());
 
-            return output;
+            return filteredOutput;
 
         }catch (Exception e){
             System.out.println(e.toString());
