@@ -1,18 +1,26 @@
 bindings:
-  accountid: Mod(<<accounts:100000>>); Hash(); ToString()
+  accountid: Shuffle(0, <<accounts:100000>>, 1); Hash(); ToString()
+  fromAccountId: Shuffle(0, <<accounts:100000>>, 2); Hash(); ToString()
   firstname: FirstNames()
   lastname: LastNames()
-  company_name: Hash(); HashedLineToString('https://raw.githubusercontent.com/phact/ebdse-training/master/data/companies.txt?token=ABQJxIJCoSF3_k36xG-MS0pUIphDMdT3ks5bq-T6wA%3D%3D'); ToString() 
+  #company_name: Hash(); HashedLineToString('https://raw.githubusercontent.com/phact/ebdse-training/master/data/companies.txt?token=ABQJxIJCoSF3_k36xG-MS0pUIphDMdT3ks5bq-T6wA%3D%3D'); ToString() 
+  company_name: Hash(); HashedLineToString('data/companies.txt'); ToString()
   transactionid: Add(1); Hash(); ToString()
   createdate: Add(1537387456); ToDate()
   startingbalance: FixedValue(0); ToDouble()
-  initialtransaction: FixedValue(0); ToString()
+  initialtransactionid: FixedValue(0); ToString()
   newbalance: Pareto(400000, 1); Min(40000000); Max(-40000000); Save('balance'); ToDouble()
+  #annoyingly you can't bind the same generator twice in the same statement
+  newbalance2: Pareto(400000, 1); Min(40000000); Max(-40000000); Save('balance'); ToDouble()
   amount: |
-    Add(-1L); Save('lastcycle'); Pareto(400000, 1); Min(40000000); Max(-40000000); Save('last_balance'); Expr('if (lastcycle == 0){ 0.0 } if (lastcycle == -1L) { balance } else { balance - last_balance}'); ToDouble();
+    Save('thisCycle'); Expr('if(thisCycle < <<accounts:100000>>) { 0 } else {thisCycle - <<accounts:100000>>}'); Pareto(400000, 1); Min(40000000); Max(-40000000); Save('last_balance'); Expr('if (thisCycle < <<accounts:100000>>) { balance } else { balance - last_balance}'); ToDouble()
   #'
-  lastbalance: Expr('if (cycle ==0)  { 0.0} else {last_balance}'); ToDouble();
+  lastbalance: Expr('if (thisCycle < <<accounts:100000>>)  { 0.0 } else {last_balance}'); ToDouble()
   #'
+  lat: Shuffle(0, <<accounts:100000>>, 1); Hash(); Normal(42, 2); ToFloat()
+  lon: Shuffle(0, <<accounts:100000>>, 1); Hash(); Normal(0, 2); ToFloat()
+  toLat: Shuffle(0, <<accounts:100000>>, 2); Hash(); Normal(42, 2); ToFloat()
+  toLon: Shuffle(0, <<accounts:100000>>, 2); Hash(); Normal(0, 2); ToFloat()
 blocks:
 # ./ebdse -vv run type=cql yaml=ledger tags=phase:schema cycles=1
   - tags:
@@ -25,22 +33,23 @@ blocks:
       phase: table
     statements:
      - create-table: |
-        create TABLE IF NOT EXISTS dsbank.ledger ( accountid text, first_name text STATIC, last_name text STATIC, company_name text STATIC, balance double STATIC, transactionid text, amount double, create_date date, PRIMARY KEY((accountid ), transactionid));
+        create TABLE IF NOT EXISTS dsbank.ledger ( accountid text, first_name text STATIC, last_name text STATIC, company_name text STATIC, lat float STATIC, lon float STATIC, to_lat float, to_lon float, from_accountid text, current_balance double STATIC, balance_snapshot double, transactionid text, amount double, create_date date, PRIMARY KEY((accountid ), transactionid));
 
-# ./ebdse -v run type=cql yaml=ledger tags=phase:write-lwt cycles=1000
+# ./ebdse -v run type=cql yaml=ledger tags=phase:write-create-accounts cycles=1000
   - tags:
       phase: write-create-accounts
     statements:
      - create-accounts: |
-        INSERT INTO dsbank.ledger (accountid , transactionid , company_name , first_name , last_name , balance ) VALUES ( {accountid}, {initialtransaction}, {company_name}, {firstname}, {lastname}, {startingbalance});
+        INSERT INTO dsbank.ledger (accountid, transactionid, company_name, first_name, last_name, current_balance, lat, lon) VALUES ( {accountid}, {initialtransactionid}, {company_name}, {firstname}, {lastname}, {startingbalance}, {lat}, {lon});
 
 # ./ebdse -v run type=cql yaml=ledger tags=phase:write-lwt cycles=1000
   - tags:
       phase: write-lwt 
+    params:
+      serial_cl: LOCAL_SERIAL
     statements:
      - write-lwt: |
-        UPDATE dsbank.ledger SET balance = {newbalance}, amount = {amount} WHERE transactionid = {transactionid} AND accountid = {accountid} IF balance = {lastbalance};
-
+        UPDATE dsbank.ledger SET current_balance = {newbalance}, balance_snapshot = {newbalance2}, amount = {amount}, from_accountid = {fromAccountId}, to_lat = {toLat}, to_lon = {toLon} WHERE transactionid = {transactionid} AND accountid = {accountid} IF current_balance = {lastbalance};
 # ./ebdse -v run type=cql yaml=ledger tags=phase:read cycles=1000
   - tags:
       phase: read
