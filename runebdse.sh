@@ -1,8 +1,8 @@
 #!/bin/bash
 threads=4
 host=localhost
-accounts=20
-cycles=100000
+accounts=1000
+cycles=10000
 retrydelay=1
 maxtries=100
 type=cql

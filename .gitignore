@@ -1,2 +1,4 @@
 ebdse
 logs/
+node_modules/
+target/

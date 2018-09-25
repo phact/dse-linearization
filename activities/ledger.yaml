@@ -17,10 +17,10 @@ bindings:
   #'
   lastbalance: Expr('if (thisCycle < <<accounts:100000>>)  { 0.0 } else {last_balance}'); ToDouble()
   #'
-  lat: Shuffle(0, <<accounts:100000>>, 1); Hash(); Normal(42, 2); ToFloat()
-  lon: Shuffle(0, <<accounts:100000>>, 1); Hash(); Normal(0, 2); ToFloat()
-  toLat: Shuffle(0, <<accounts:100000>>, 2); Hash(); Normal(42, 2); ToFloat()
-  toLon: Shuffle(0, <<accounts:100000>>, 2); Hash(); Normal(0, 2); ToFloat()
+  lat: Shuffle(0, <<accounts:100000>>, 1); Normal(42, 2); ToFloat()
+  lon: Shuffle(0, <<accounts:100000>>, 1); Normal(0, 2); ToFloat()
+  toLat: Shuffle(0, <<accounts:100000>>, 2); Normal(42, 2); ToFloat()
+  toLon: Shuffle(0, <<accounts:100000>>, 2); Normal(0, 2); ToFloat()
 blocks:
 # ./ebdse -vv run type=cql yaml=ledger tags=phase:schema cycles=1
   - tags:
