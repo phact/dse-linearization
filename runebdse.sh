@@ -1,12 +1,12 @@
 #!/bin/bash
-threads=4
-host=localhost
-accounts=
-cycles=10000
+threads=128
+host=54.164.104.170
+accounts=100000
+cycles=100000
 retrydelay=1
 maxtries=100
 type=cql
-rate=10
+rate=3000
 
 
 ./ebdse -vv run type=$type yaml=ledger tags=phase:schema cycles=1 host=$host

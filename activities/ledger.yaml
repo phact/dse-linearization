@@ -27,7 +27,7 @@ blocks:
       phase: schema
     statements:
      - create-keyspace: |
-        create KEYSPACE IF NOT EXISTS dsbank WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1 };
+        create KEYSPACE IF NOT EXISTS dsbank WITH replication = {'class': 'NetworkTopologyStrategy', 'multicloud-aws': 3, 'multicloud-gce': 3, 'multicloud-azure':  3};
 # ./ebdse -vv run type=cql yaml=ledger tags=phase:table cycles=1
   - tags:
       phase: table
@@ -46,7 +46,8 @@ blocks:
   - tags:
       phase: write-lwt 
     params:
-      serial_cl: LOCAL_SERIAL
+      cl: <<consistency:LOCAL_QUORUM>>
+      serial_cl: <<serial_consistency:LOCAL_SERIAL>>
     statements:
      - write-lwt: |
         UPDATE dsbank.ledger SET current_balance = {newbalance}, balance_snapshot = {newbalance2}, amount = {amount}, from_accountid = {fromAccountId}, to_lat = {toLat}, to_lon = {toLon} WHERE transactionid = {transactionid} AND accountid = {accountid} IF current_balance = {lastbalance};
