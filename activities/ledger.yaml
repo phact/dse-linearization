@@ -27,7 +27,7 @@ blocks:
       phase: schema
     statements:
      - create-keyspace: |
-        create KEYSPACE IF NOT EXISTS dsbank WITH replication = {'class': 'NetworkTopologyStrategy', 'multicloud-aws': 3, 'multicloud-gce': 3, 'multicloud-azure':  3};
+        create KEYSPACE IF NOT EXISTS dsbank WITH replication = {'class': 'NetworkTopologyStrategy', 'SearchGraphAnalytics': 1};
 # ./ebdse -vv run type=cql yaml=ledger tags=phase:table cycles=1
   - tags:
       phase: table

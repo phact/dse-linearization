@@ -1,9 +1,8 @@
 #!/bin/bash
 threads=12
-host=54.164.104.170
+host=localhost
 accounts=1
-cycles=12
-retrydelay=0
+cycles=100000
 maxtries=100
 type=cql
 rate=3000
@@ -11,6 +10,9 @@ rate=3000
 #serial_consistency=SERIAL
 consistency=LOCAL_QUORUM
 serial_consistency=LOCAL_SERIAL
+retryreplace=true
+retrydelay=0
+maxretrydelay=500
 
 
 
@@ -18,4 +20,4 @@ serial_consistency=LOCAL_SERIAL
 ./ebdse -vv run type=$type yaml=ledger tags=phase:table cycles=1 host=$host
 ./ebdse -vv run type=$type yaml=ledger tags=phase:write-create-accounts cycles=$cycles threads=$threads host=$host accounts=$accounts
 #./ebdse -vv run type=$type yaml=ledger tags=phase:write-lwt errors=retry maxtries=$maxtries cycles=$cycles threads=$threads host=$host accounts=$accounts retrydelay=$retrydelay targetrate=$rate
-./ebdse -vv run type=$type yaml=ledger tags=phase:write-lwt errors=retry maxtries=$maxtries cycles=$cycles threads=$threads host=$host accounts=$accounts retrydelay=$retrydelay consistency=$consistency serial_consistency=$serial_consistency
+./ebdse -vv run type=$type yaml=ledger tags=phase:write-lwt errors=retry maxtries=$maxtries cycles=$cycles threads=$threads host=$host accounts=$accounts retrydelay=$retrydelay consistency=$consistency serial_consistency=$serial_consistency retryreplace=$retryreplace maxretrydelay=$maxretrydelay
