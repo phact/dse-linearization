@@ -1,5 +1,25 @@
 #!/bin/bash
 
+HOST_IP=$(ifconfig | awk '/inet/ { print $2 }' | egrep -v '^fe|^127|^192|^172|::' | head -1)
+HOST_IP=${IP#addr:}
+export IP=$HOST_IP
+
+if [[ $HOSTNAME == "node"* ]] ; then
+    #rightscale
+    HOST_IP=$(grep $(hostname)_ext /etc/hosts | awk '{print $1}')
+    export IP=$HOST_IP
+fi
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Mac OSX
+    HOST_IP=$(docker run --net=host debian:jessie ip addr show|grep inet|grep eth0|awk '{print $2}'|awk -F'/' '{print $1}')
+    export IP=localhost
+fi
+
+if [ $IP == ""  ]; then
+    export IP=localhost
+fi
+
 if [[ $HOSTNAME == "node"* ]] ; then
   su ds_user <<'EOF'
 set -x
