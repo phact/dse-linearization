@@ -1,9 +1,28 @@
 #!/bin/bash
 
+if [[ $HOSTNAME == "node"* ]] ; then
+  su ds_user <<'EOF'
+set -x
+# Nodejs
+export NODEJS_HOME=/usr/local/lib/nodejs/node-v"9.10.1"/bin
+export PATH=$NODEJS_HOME:$PATH
+cd app/ui
+npm install
+EOF
+fi
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  npm install
+fi
+
+NODE_VERSION=9.10.1
+export NODEJS_HOME=/usr/local/lib/nodejs/node-v"${NODE_VERSION}"/bin
+export PATH=$NODEJS_HOME:$PATH
+
 export MapboxAccessToken=pk.eyJ1IjoicGhhY3QiLCJhIjoiY2poc3kyYjZjMDd4czNwcDc4NnFuN3M0MSJ9.evDUvKHEPevjLOv1t04aAA
 
 cd app/ui
-npm install
+
 npm run build
 
 cd ..
