@@ -1,6 +1,6 @@
 #!/bin/bash
 threads=128
-host=54.164.104.170
+host=localhost
 accounts=100000
 cycles=100000
 retrydelay=1

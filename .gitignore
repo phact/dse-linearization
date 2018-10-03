@@ -2,3 +2,5 @@ ebdse
 logs/
 node_modules/
 target/
+.idea
+*.iml
