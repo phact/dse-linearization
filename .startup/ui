@@ -1,0 +1,14 @@
+#!/bin/bash
+
+export MapboxAccessToken=pk.eyJ1IjoicGhhY3QiLCJhIjoiY2poc3kyYjZjMDd4czNwcDc4NnFuN3M0MSJ9.evDUvKHEPevjLOv1t04aAA
+
+cd app/ui
+npm install
+npm run build
+
+cd ..
+mvn package
+
+lsof -i:8081| grep LISTEN| awk '{print $2}' | xargs kill
+
+nohup java -jar target/dse-visualizer.jar server conf/dseVisualizerApplication.yaml &

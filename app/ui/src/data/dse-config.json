@@ -53,7 +53,10 @@
           "visualChannels": {
             "colorField": null,
             "colorScale": "ordinal",
-            "sizeField": null,
+            "sizeField": {
+              "name": "currentBalance",
+              "type": "integer"
+            },
             "sizeScale": "linear"
           }
         }
@@ -80,12 +83,12 @@
       "splitMaps": []
     },
     "mapState": {
-      "bearing": -0.3059490084985832,
+      "bearing": -21.07517977772936,
       "dragRotate": true,
-      "latitude": 29.60689497316836,
-      "longitude": 14.048467282401232,
-      "pitch": 51.38211382113821,
-      "zoom": 2.3104568109290717,
+      "latitude": 42.901677130769514,
+      "longitude": -0.5605065909308075,
+      "pitch": 55.23311241743872,
+      "zoom": 6.02550370292941,
       "isSplit": false
     },
     "mapStyle": {

@@ -1,12 +1,18 @@
 #!/bin/bash
-threads=128
+
 host=localhost
-accounts=100000
+if [ $# -gt 0 ]; then
+    echo $1
+    host=$1
+fi
+
+threads=128
+accounts=10
 cycles=100000
 retrydelay=1
 maxtries=100
 type=cql
-rate=3000
+rate=30
 
 
 ./ebdse -vv run type=$type yaml=ledger tags=phase:schema cycles=1 host=$host

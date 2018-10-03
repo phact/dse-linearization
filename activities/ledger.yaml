@@ -1,6 +1,6 @@
 bindings:
   accountid: Shuffle(0, <<accounts:100000>>, 1); Hash(); ToString()
-  fromAccountId: Shuffle(0, <<accounts:100000>>, 2); Hash(); ToString()
+  fromAccountId: Hash(); Shuffle(0, <<accounts:100000>>, 2); Hash(); ToString()
   firstname: FirstNames()
   lastname: LastNames()
   #company_name: Hash(); HashedLineToString('https://raw.githubusercontent.com/phact/ebdse-training/master/data/companies.txt?token=ABQJxIJCoSF3_k36xG-MS0pUIphDMdT3ks5bq-T6wA%3D%3D'); ToString() 
@@ -19,8 +19,8 @@ bindings:
   #'
   lat: Shuffle(0, <<accounts:100000>>, 1); Normal(42, 2); ToFloat()
   lon: Shuffle(0, <<accounts:100000>>, 2); Normal(0, 2); ToFloat()
-  toLat: Shuffle(0, <<accounts:100000>>, 3); Normal(42, 2); ToFloat()
-  toLon: Shuffle(0, <<accounts:100000>>, 4); Normal(0, 2); ToFloat()
+  toLat: Hash(); Shuffle(0, <<accounts:100000>>, 3); Normal(42, 2); ToFloat()
+  toLon: Hash(); Shuffle(0, <<accounts:100000>>, 4); Normal(0, 2); ToFloat()
 blocks:
 # ./ebdse -vv run type=cql yaml=ledger tags=phase:schema cycles=1
   - tags:

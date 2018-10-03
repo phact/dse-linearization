@@ -1,6 +1,13 @@
 #!/bin/bash
-threads=12
+
+
 host=localhost
+if [ $# -gt 0 ]; then
+    echo $1
+    host=$1
+fi
+
+threads=12
 accounts=1
 cycles=100000
 maxtries=100

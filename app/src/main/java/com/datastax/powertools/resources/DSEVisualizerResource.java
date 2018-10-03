@@ -31,7 +31,7 @@ public class DSEVisualizerResource {
     private final DseSession session;
     private final DSEVisualizerConfig config;
 
-    private static final String ALL_EVENTS = "select * from dsbank.ledger;";
+    private static final String ALL_EVENTS = "select * from dsbank.ledger limit 10000;";
     private PreparedStatement allEvents;
 
     @Accessor
@@ -130,7 +130,7 @@ public class DSEVisualizerResource {
 
             List<LedgerEvent> filteredOutput = output.stream().filter(x ->
             {
-                return x.currentBalance > 0;
+                return x.balanceSnapshot > 0;
             }).collect(Collectors.toList());
 
             return filteredOutput;
