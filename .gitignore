@@ -5,3 +5,4 @@ target/
 .idea
 *.iml
 nohup.out
+app/src/main/resources/assets/bundle.js

@@ -1,9 +1,48 @@
 #!/bin/bash
 
+HOST_IP=$(ifconfig | awk '/inet/ { print $2 }' | egrep -v '^fe|^127|^192|^172|::' | head -1)
+HOST_IP=${IP#addr:}
+export IP=$HOST_IP
+
+if [[ $HOSTNAME == "node"* ]] ; then
+    #rightscale
+    HOST_IP=$(grep $(hostname)_ext /etc/hosts | awk '{print $1}')
+    export IP=$HOST_IP
+fi
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Mac OSX
+    HOST_IP=$(docker run --net=host debian:jessie ip addr show|grep inet|grep eth0|awk '{print $2}'|awk -F'/' '{print $1}')
+    export IP=localhost
+fi
+
+if [ $IP == ""  ]; then
+    export IP=localhost
+fi
+
+if [[ $HOSTNAME == "node"* ]] ; then
+  su ds_user <<'EOF'
+set -x
+# Nodejs
+export NODEJS_HOME=/usr/local/lib/nodejs/node-v"9.10.1"/bin
+export PATH=$NODEJS_HOME:$PATH
+cd app/ui
+npm install
+EOF
+fi
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  npm install
+fi
+
+NODE_VERSION=9.10.1
+export NODEJS_HOME=/usr/local/lib/nodejs/node-v"${NODE_VERSION}"/bin
+export PATH=$NODEJS_HOME:$PATH
+
 export MapboxAccessToken=pk.eyJ1IjoicGhhY3QiLCJhIjoiY2poc3kyYjZjMDd4czNwcDc4NnFuN3M0MSJ9.evDUvKHEPevjLOv1t04aAA
 
 cd app/ui
-npm install
+
 npm run build
 
 cd ..
