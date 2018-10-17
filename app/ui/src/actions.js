@@ -66,9 +66,10 @@ export function getData(url){
         get({
             url:url,
             success: function(res){
-                var csvData = convertToCSV(res.data);
-                dispatch(updateData("GET_DATA",csvData));
-                const data = Processors.processCsvData(csvData);
+                //var csvData = convertToCSV(res.data);
+                dispatch(updateData("GET_DATA",res.data));
+                const data = Processors.processRowObject(res.data);
+                //const data = Processors.processCsvData(csvData);
                 const dsedata = {
                   data,
                   info: {
