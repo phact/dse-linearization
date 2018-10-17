@@ -8,6 +8,7 @@ IP=${IP#addr:}
 if [[ $HOSTNAME == "node"* ]] ; then
     #rightscale
     IP=$(grep $(hostname)_ext /etc/hosts | awk '{print $1}')
+    REPLICATION="{'class': 'SimpleStrategy', 'replication_factor': '3'}"
 fi
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -20,4 +21,4 @@ if [[ "$IP" == "" ]]; then
 fi
 
 ./concurrent.sh $IP
-nohup ./runebdse.sh $IP &
+nohup ./runebdse.sh $IP "${REPLICATION}" &
