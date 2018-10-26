@@ -26,21 +26,24 @@ blocks:
   - tags:
       phase: schema
     statements:
+#       create KEYSPACE IF NOT EXISTS <<ks:dsbank>> WITH replication = << REPLICATION : "{'class': 'NetworkTopologyStrategy', 'SearchGraphAnalytics': 1}" >>;
      - create-keyspace: |
-        create KEYSPACE IF NOT EXISTS dsbank WITH replication = <<REPLICATION:"{'class': 'NetworkTopologyStrategy', 'SearchGraphAnalytics': 1}">>;
+        create KEYSPACE IF NOT EXISTS <<ks:dsbank>> WITH replication = <<REPLICATION:"{'class': 'NetworkTopologyStrategy', 'SearchGraphAnalytics': 1}">>;
+
+
 # ./ebdse -vv run type=cql yaml=ledger tags=phase:table cycles=1
   - tags:
       phase: table
     statements:
      - create-table: |
-        create TABLE IF NOT EXISTS dsbank.ledger ( accountid text, first_name text STATIC, last_name text STATIC, company_name text STATIC, lat float STATIC, lon float STATIC, to_lat float, to_lon float, from_accountid text, current_balance double STATIC, balance_snapshot double, transactionid text, amount double, create_date date, PRIMARY KEY((accountid ), transactionid));
+        create TABLE IF NOT EXISTS <<ks:dsbank>>.ledger ( accountid text, first_name text STATIC, last_name text STATIC, company_name text STATIC, lat float STATIC, lon float STATIC, to_lat float, to_lon float, from_accountid text, current_balance double STATIC, balance_snapshot double, transactionid text, amount double, create_date date, PRIMARY KEY((accountid ), transactionid));
 
 # ./ebdse -v run type=cql yaml=ledger tags=phase:write-create-accounts cycles=1000
   - tags:
       phase: write-create-accounts
     statements:
      - create-accounts: |
-        INSERT INTO dsbank.ledger (accountid, transactionid, company_name, first_name, last_name, current_balance, lat, lon) VALUES ( {accountid}, {initialtransactionid}, {company_name}, {firstname}, {lastname}, {startingbalance}, {lat}, {lon});
+        INSERT INTO <<ks:dsbank>>.ledger (accountid, transactionid, company_name, first_name, last_name, current_balance, lat, lon) VALUES ( {accountid}, {initialtransactionid}, {company_name}, {firstname}, {lastname}, {startingbalance}, {lat}, {lon});
 
 # ./ebdse -v run type=cql yaml=ledger tags=phase:write-lwt cycles=1000
   - tags:
@@ -50,10 +53,10 @@ blocks:
       serial_cl: <<serial_consistency:LOCAL_SERIAL>>
     statements:
      - write-lwt: |
-        UPDATE dsbank.ledger SET current_balance = {newbalance}, balance_snapshot = {newbalance2}, amount = {amount}, from_accountid = {fromAccountId}, to_lat = {toLat}, to_lon = {toLon} WHERE transactionid = {transactionid} AND accountid = {accountid} IF current_balance = {lastbalance};
+        UPDATE <<ks:dsbank>>.ledger SET current_balance = {newbalance}, balance_snapshot = {newbalance2}, amount = {amount}, from_accountid = {fromAccountId}, to_lat = {toLat}, to_lon = {toLon} WHERE transactionid = {transactionid} AND accountid = {accountid} IF current_balance = {lastbalance};
 # ./ebdse -v run type=cql yaml=ledger tags=phase:read cycles=1000
   - tags:
       phase: read
     statements:
      - read: |
-        select * from dsbank.ledger WHERE transactionid = {transactionid} AND accountid = {accountid};
+        select * from <<ks:dsbank>>.ledger WHERE transactionid = {transactionid} AND accountid = {accountid};
