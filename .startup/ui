@@ -16,7 +16,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     export IP=localhost
 fi
 
-if [ $IP == ""  ]; then
+if [ -z $IP ]; then
     export IP=localhost
 fi
 
