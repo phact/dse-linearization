@@ -8,12 +8,12 @@ This End User License Agreement ("EULA") is a legal agreement between you and Da
 This EULA grants you the following limited, non-exclusive rights to the Software, subject to the terms and conditions set forth in this EULA:
 1. Your license rights under this EULA are non-exclusive, non-transferrable, and non-sublicenseable.
 2. You may install and use the Software for internal and example purposes only provided that:
-  1. you ensure all copyright notices are retained in any copies made for your example purposes;
-  2. you indemnify, hold harmless, and defend DataStax, Inc. from and against any claims or lawsuits, including attorney's fees, that arise as a result from the use of the Software.
+    1. you ensure all copyright notices are retained in any copies made for your example purposes;
+    2. you indemnify, hold harmless, and defend DataStax, Inc. from and against any claims or lawsuits, including attorney's fees, that arise as a result from the use of the Software.
 3. You may view, modify and compile the Source Code; provided that:
-  1. you ensure all copyright notices are retained;
-  2. The Source Code is used for internal and example purposes only; and
-  3. you indemnify, hold harmless, and defend DataStax, Inc. from and against any claims or lawsuits, including attorney's fees, that arise as a result from the use or distribution of the Software
+    1. you ensure all copyright notices are retained;
+    2. The Source Code is used for internal and example purposes only; and
+    3. you indemnify, hold harmless, and defend DataStax, Inc. from and against any claims or lawsuits, including attorney's fees, that arise as a result from the use or distribution of the Software
 
 ### 3. LICENSE RESTRICTIONS
 1. Other than as set forth in Section 2, you may not make or distribute copies of the Software.
